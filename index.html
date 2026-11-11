@@ -160,12 +160,6 @@
                 <span class="text-pumpGreen" aria-hidden="true">⚡</span>
                 <span id="dopamineText" data-i18n="dopamineBtn">Dopamine: OFF</span>
             </button>
-
-            <!-- Edit CA Button (for site owner quick testing) -->
-            <button onclick="openCaModal()" class="px-3 py-1.5 rounded-lg font-mono text-xs font-bold border border-white/20 bg-white/5 hover:bg-white/10 text-gray-300 transition flex items-center gap-1.5" title="Set CA">
-                <span class="text-pumpGreen" aria-hidden="true">✎</span>
-                <span class="hidden md:inline" data-i18n="editCaBtn">Set CA</span>
-            </button>
         </div>
     </header>
 
@@ -396,7 +390,7 @@
                     <div class="sm:col-span-7 bg-black/80 border-2 border-white/20 rounded-xl p-3 flex items-center justify-between gap-2">
                         <div class="overflow-hidden">
                             <span class="block text-[10px] font-mono uppercase text-gray-400" data-i18n="caLabel">Contract Address (SOL):</span>
-                            <code id="caDisplay" class="font-mono text-xs sm:text-sm font-bold text-pumpGreen truncate block">TBA — Launching Soon</code>
+                            <code id="caDisplay" class="font-mono text-xs sm:text-sm font-bold text-pumpGreen break-all block">PREGXoYBja1oFj3MLkDfCRQCX7v8oRX2H9dTH28ivTS</code>
                         </div>
                         <button onclick="copyText('caDisplay', true)" class="shrink-0 px-3 py-2 rounded-lg bg-white/10 hover:bg-pumpGreen hover:text-black text-white font-mono text-xs font-bold transition flex items-center gap-1.5">
                             <span class="" aria-hidden="true">⧉</span>
@@ -406,11 +400,11 @@
 
                     <!-- Action Buttons: DEX & Pump.fun -->
                     <div class="sm:col-span-5 flex gap-2">
-                        <a id="dexLink" href="https://dexscreener.com/solana" target="_blank" rel="noopener noreferrer" class="flex-1 bg-pumpGreen hover:bg-pumpGreenDark text-black font-display font-extrabold text-sm rounded-xl px-4 py-3 flex items-center justify-center gap-2 shadow-neo transition transform hover:-translate-y-0.5">
+                        <a id="dexLink" href="https://dexscreener.com/solana/PREGXoYBja1oFj3MLkDfCRQCX7v8oRX2H9dTH28ivTS" target="_blank" rel="noopener noreferrer" class="flex-1 bg-pumpGreen hover:bg-pumpGreenDark text-black font-display font-extrabold text-sm rounded-xl px-4 py-3 flex items-center justify-center gap-2 shadow-neo transition transform hover:-translate-y-0.5">
                             <span class="" aria-hidden="true">📈</span>
                             <span>DEXSCREENER</span>
                         </a>
-                        <a href="https://pump.fun" target="_blank" rel="noopener noreferrer" class="bg-cardDark hover:bg-white/10 text-white border-2 border-white/20 font-mono font-bold text-xs rounded-xl px-3.5 py-3 flex items-center justify-center transition" title="Pump.fun">
+                        <a href="https://pump.fun/coin/PREGXoYBja1oFj3MLkDfCRQCX7v8oRX2H9dTH28ivTS" target="_blank" rel="noopener noreferrer" class="bg-cardDark hover:bg-white/10 text-white border-2 border-white/20 font-mono font-bold text-xs rounded-xl px-3.5 py-3 flex items-center justify-center transition" title="Pump.fun">
                             💊 Pump
                         </a>
                     </div>
@@ -576,12 +570,12 @@
                 modalCaDesc: "Paste your live Solana mint address here to update the banner and link the DexScreener button automatically.",
                 toastCopiedWallet: "Rehab address 8q6g...RnW7 copied!",
                 toastCopiedCa: "Contract Address copied to clipboard!",
-                defaultCaText: "TBA — Launching Soon"
+                defaultCaText: "PREGXoYBja1oFj3MLkDfCRQCX7v8oRX2H9dTH28ivTS"
             }
         };
 
         let currentLang = 'en';
-        let customCa = '';
+        let customCa = 'PREGXoYBja1oFj3MLkDfCRQCX7v8oRX2H9dTH28ivTS';
         let dopamineMode = false;
         let degenScore = 45;
 
