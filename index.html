@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pregabalINU ($PREGABALINU) — Degen Rehab Protocol</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Space Grotesk & JetBrains Mono & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#0b0f0c',
+                        cardDark: '#121914',
+                        pumpGreen: '#00ff66',
+                        pumpGreenDark: '#00cc52',
+                        pillRed: '#ef4444',
+                        oliveBorder: '#3b4d32',
+                        coinGreen: '#193823'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    boxShadow: {
+                        'neo': '4px 4px 0px 0px #00ff66',
+                        'neo-red': '4px 4px 0px 0px #ef4444',
+                        'neo-white': '4px 4px 0px 0px #ffffff',
+                        'glow': '0 0 25px rgba(0, 255, 102, 0.25)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0b0f0c;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(0, 255, 102, 0.07) 0%, transparent 35%),
+                radial-gradient(circle at 85% 80%, rgba(239, 68, 68, 0.07) 0%, transparent 35%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+        }
+
+        /* Floating Coin Animation */
+        @keyframes floatCoin {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1.5deg); }
+        }
+        .coin-float {
+            animation: floatCoin 4s ease-in-out infinite;
+        }
+
+        /* Manic Eyes Pulse */
+        @keyframes eyeTwitch {
+            0%, 90%, 100% { transform: scale(1); }
+            93% { transform: scale(1.08) rotate(-2deg); }
+            96% { transform: scale(0.96) rotate(2deg); }
+        }
+        .manic-eyes {
+            transform-origin: center;
+            animation: eyeTwitch 3.2s infinite;
+        }
+
+        /* Dopamine Mode Shake & Hue */
+        @keyframes dopamineShake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-1.5px, 1px); }
+            50% { transform: translate(1.5px, -1px); }
+            75% { transform: translate(-1px, -1.5px); }
+        }
+        .dopamine-active .coin-float {
+            animation: dopamineShake 0.25s infinite, floatCoin 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 25px rgba(0, 255, 102, 0.65));
+        }
+
+        /* Marquee Ticker */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: 200%;
+            animation: marquee 24s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f0c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2e23;
+            border-radius: 4px;
+            border: 1px solid #00ff66;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-pumpGreen selection:text-black">
+
+    <!-- Background Floating Particles Canvas (Dopamine Mode) -->
+    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
+
+    <!-- Top Live Marquee Banner -->
+    <div class="bg-pumpGreen text-black font-mono text-xs sm:text-sm font-extrabold py-1.5 border-b-2 border-black overflow-hidden z-20 relative">
+        <div class="animate-marquee whitespace-nowrap">
+            <span class="mx-4">💊 $PREGABALINU — DEGEN REHAB PROTOCOL</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4" data-i18n="marquee1">25% OF SUPPLY SENT TO CONTINUUM OF CARE'S DONATION ADDRESS</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">DONATION WALLET: 8q6gDDe7ES39Ppktr5yHqiCfNyG9H6KiGtBCFFpwRnW7</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4" data-i18n="marquee2">FIGHTING PUMP.FUN GAMBLING ADDICTION WITH REAL RECOVERY</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">💊 $PREGABALINU — DEGEN REHAB PROTOCOL</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4" data-i18n="marquee1">25% OF SUPPLY SENT TO CONTINUUM OF CARE'S DONATION ADDRESS</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">DONATION WALLET: 8q6gDDe7ES39Ppktr5yHqiCfNyG9H6KiGtBCFFpwRnW7</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4" data-i18n="marquee2">FIGHTING PUMP.FUN GAMBLING ADDICTION WITH REAL RECOVERY</span>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3 z-20 relative">
+        <!-- Brand Logo -->
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-coinGreen border-2 border-pumpGreen flex items-center justify-center shadow-glow">
+                <span class="text-xl">💊</span>
+            </div>
+            <div>
+                <span class="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-white">pregabal<span class="text-pumpGreen">INU</span></span>
+                <span class="hidden sm:inline-block ml-2 text-xs font-mono uppercase px-2 py-0.5 bg-pillRed/20 text-pillRed border border-pillRed/50 rounded-md">300mg SOL</span>
+            </div>
+        </div>
+
+        <!-- Right Controls: Dopamine Toggle, Set CA Preview, Language Switch -->
+        <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Dopamine Mode Button -->
+            <button id="dopamineBtn" onclick="toggleDopamineMode()" class="px-3 py-1.5 rounded-lg font-mono text-xs font-bold border-2 border-pumpGreen/60 bg-cardDark hover:bg-pumpGreen hover:text-black transition flex items-center gap-1.5">
+                <span class="text-pumpGreen" aria-hidden="true">⚡</span>
+                <span id="dopamineText" data-i18n="dopamineBtn">Dopamine: OFF</span>
+            </button>
+
+            <!-- Edit CA Button (for site owner quick testing) -->
+            <button onclick="openCaModal()" class="px-3 py-1.5 rounded-lg font-mono text-xs font-bold border border-white/20 bg-white/5 hover:bg-white/10 text-gray-300 transition flex items-center gap-1.5" title="Set CA">
+                <span class="text-pumpGreen" aria-hidden="true">✎</span>
+                <span class="hidden md:inline" data-i18n="editCaBtn">Set CA</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN 1-BANNER HERO & REHAB DASHBOARD -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 z-10 relative flex flex-col justify-center">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+            
+            <!-- LEFT COLUMN: Custom Meme Token Badge + Degen Addiction Meter (5 cols) -->
+            <div class="lg:col-span-5 flex flex-col items-center">
+                
+                <!-- High-Detail Custom Vector Mascot Badge (Exact Match to the Uploaded pregabalINU Coin) -->
+                <div class="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 flex items-center justify-center coin-float">
+                    <!-- Ambient Glow Behind Coin -->
+                    <div class="absolute inset-4 rounded-full bg-pumpGreen/15 blur-2xl pointer-events-none"></div>
+                    
+                    <svg viewBox="0 0 500 500" class="w-full h-full drop-shadow-[0_12px_25px_rgba(0,0,0,0.85)] select-none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <!-- Paths for arched text -->
+                            <path id="topTextPath" d="M 88,250 A 162,162 0 1,1 412,250" />
+                            <path id="bottomTextPath" d="M 76,250 A 174,174 0 1,0 424,250" />
+                            <!-- Clip Path for inner circle -->
+                            <clipPath id="innerCircleClip">
+                                <circle cx="250" cy="250" r="142" />
+                            </clipPath>
+                        </defs>
+
+                        <!-- 3D Coin Side Extrusion (Left Offset) -->
+                        <circle cx="240" cy="252" r="218" fill="#4f6239" stroke="#111712" stroke-width="10" />
+
+                        <!-- Outer Olive Ring -->
+                        <circle cx="254" cy="250" r="218" fill="#52663c" stroke="#111712" stroke-width="10" />
+
+                        <!-- Main Dark Green Coin Rim -->
+                        <circle cx="254" cy="250" r="198" fill="#183b24" stroke="#111712" stroke-width="10" />
+
+                        <!-- Inner Dark Background Circle -->
+                        <circle cx="254" cy="250" r="142" fill="#0d1711" stroke="#111712" stroke-width="9" />
+
+                        <!-- Arched Coin Text: PREGABALINU (Top & Bottom) -->
+                        <text fill="#fef08a" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="37" letter-spacing="3" stroke="#111712" stroke-width="2" paint-order="stroke">
+                            <textPath href="#topTextPath" startOffset="50%" text-anchor="middle">PREGABALINU</textPath>
+                        </text>
+                        <text fill="#fef08a" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="38" letter-spacing="3" stroke="#111712" stroke-width="2" paint-order="stroke">
+                            <textPath href="#bottomTextPath" startOffset="50%" text-anchor="middle">PREGABALINU</textPath>
+                        </text>
+
+                        <!-- INSIDE COIN ARTWORK -->
+                        <g clip-path="url(#innerCircleClip)">
+                            <!-- Green Pump Arrows in Background -->
+                            <path d="M 115,310 L 145,260 L 175,300 L 210,220" fill="none" stroke="#16c75a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M 335,280 L 375,200 M 352,202 L 378,195 L 382,222" fill="none" stroke="#16c75a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+
+                            <!-- Floating Mini Capsules -->
+                            <!-- Top Left Mini Pill -->
+                            <g transform="translate(145, 190) rotate(45)">
+                                <rect x="-16" y="-7" width="16" height="14" rx="7" fill="#f8fafc" stroke="#111712" stroke-width="3"/>
+                                <rect x="0" y="-7" width="16" height="14" rx="7" fill="#dc2626" stroke="#111712" stroke-width="3"/>
+                            </g>
+                            <!-- Mid Left Tiny Pill -->
+                            <g transform="translate(135, 238) rotate(-18)">
+                                <rect x="-11" y="-5" width="11" height="10" rx="5" fill="#dc2626" stroke="#111712" stroke-width="2.5"/>
+                                <rect x="0" y="-5" width="11" height="10" rx="5" fill="#f8fafc" stroke="#111712" stroke-width="2.5"/>
+                            </g>
+                            <!-- Top Center Mini Pill -->
+                            <g transform="translate(275, 128) rotate(-38)">
+                                <rect x="-18" y="-8" width="18" height="16" rx="8" fill="#dc2626" stroke="#111712" stroke-width="3"/>
+                                <rect x="0" y="-8" width="18" height="16" rx="8" fill="#f8fafc" stroke="#111712" stroke-width="3"/>
+                            </g>
+                            <!-- TopTiny Pill -->
+                            <g transform="translate(232, 132) rotate(65)">
+                                <rect x="-10" y="-4.5" width="10" height="9" rx="4.5" fill="#f8fafc" stroke="#111712" stroke-width="2.5"/>
+                                <rect x="0" y="-4.5" width="10" height="9" rx="4.5" fill="#dc2626" stroke="#111712" stroke-width="2.5"/>
+                            </g>
+                            <!-- Right Mini Pill -->
+                            <g transform="translate(366, 184) rotate(-35)">
+                                <rect x="-12" y="-5" width="12" height="10" rx="5" fill="#dc2626" stroke="#111712" stroke-width="2.5"/>
+                                <rect x="0" y="-5" width="12" height="10" rx="5" fill="#f8fafc" stroke="#111712" stroke-width="2.5"/>
+                            </g>
+                            <!-- Bottom Right Mini Pill -->
+                            <g transform="translate(384, 265) rotate(-55)">
+                                <rect x="-18" y="-8" width="18" height="16" rx="8" fill="#dc2626" stroke="#111712" stroke-width="3"/>
+                                <rect x="0" y="-8" width="18" height="16" rx="8" fill="#f8fafc" stroke="#111712" stroke-width="3"/>
+                            </g>
+
+                            <!-- SHIBA INU HEAD & BODY -->
+                            <!-- Neck / Fur Base -->
+                            <path d="M 148,365 C 155,310 170,260 175,230 L 340,240 C 345,290 342,355 340,400 Z" fill="#e0822d" stroke="#111712" stroke-width="7" />
+                            
+                            <!-- Left Ear -->
+                            <path d="M 176,215 C 170,155 182,120 192,122 C 208,125 232,155 244,178 Z" fill="#e0822d" stroke="#111712" stroke-width="7" stroke-linejoin="round"/>
+                            <path d="M 188,195 C 186,162 192,140 197,140 C 206,142 220,165 228,182 Z" fill="#f3bd88" stroke="#111712" stroke-width="4" stroke-linejoin="round"/>
+
+                            <!-- Right Ear -->
+                            <path d="M 300,175 C 315,148 332,130 342,132 C 350,135 352,168 342,212 Z" fill="#e0822d" stroke="#111712" stroke-width="7" stroke-linejoin="round"/>
+                            <path d="M 312,180 C 322,160 332,148 337,150 C 341,154 340,175 333,198 Z" fill="#f3bd88" stroke="#111712" stroke-width="4" stroke-linejoin="round"/>
+
+                            <!-- Shiba Main Head -->
+                            <path d="M 165,255 C 162,195 205,165 265,165 C 325,165 358,205 360,260 C 362,305 340,348 335,395 L 152,395 C 155,345 168,300 165,255 Z" fill="#e58a35" stroke="#111712" stroke-width="7" />
+
+                            <!-- White Cream Cheeks & Chest -->
+                            <path d="M 175,268 C 195,245 235,242 268,255 C 300,242 338,248 355,270 C 362,305 335,345 315,355 L 308,395 L 222,395 C 205,360 175,335 175,268 Z" fill="#fdf0d5" stroke="#111712" stroke-width="5" />
+
+                            <!-- Cream Eyebrow Spots -->
+                            <ellipse cx="238" cy="196" rx="14" ry="8" transform="rotate(-12 238 196)" fill="#fdf0d5" />
+                            <ellipse cx="312" cy="196" rx="13" ry="8" transform="rotate(15 312 196)" fill="#fdf0d5" />
+
+                            <!-- GREEN GLASSES ON FOREHEAD -->
+                            <g transform="translate(0, -2)">
+                                <!-- Left Strap -->
+                                <path d="M 166,228 L 204,166 L 214,180 L 166,245 Z" fill="#32a852" stroke="#111712" stroke-width="6" stroke-linejoin="round"/>
+                                <!-- Glasses Frame -->
+                                <rect x="202" y="152" width="76" height="44" rx="14" transform="rotate(-4 240 174)" fill="#38b858" stroke="#111712" stroke-width="6"/>
+                                <rect x="292" y="150" width="66" height="44" rx="14" transform="rotate(4 325 172)" fill="#38b858" stroke="#111712" stroke-width="6"/>
+                                <!-- Bridge -->
+                                <path d="M 275,164 Q 286,158 295,164" fill="none" stroke="#111712" stroke-width="8" stroke-linecap="round"/>
+                                <!-- Lenses -->
+                                <rect x="212" y="160" width="56" height="28" rx="8" transform="rotate(-4 240 174)" fill="#84a955" stroke="#111712" stroke-width="4"/>
+                                <rect x="301" y="158" width="48" height="28" rx="8" transform="rotate(4 325 172)" fill="#84a955" stroke="#111712" stroke-width="4"/>
+                                <!-- Lens Glare -->
+                                <line x1="226" y1="164" x2="238" y2="182" stroke="#bef264" stroke-width="4" stroke-linecap="round"/>
+                                <line x1="316" y1="162" x2="326" y2="180" stroke="#bef264" stroke-width="4" stroke-linecap="round"/>
+                            </g>
+
+                            <!-- MANIC BLOODSHOT EYES (Meme Reference) -->
+                            <g class="manic-eyes">
+                                <!-- Left Eye -->
+                                <circle cx="242" cy="230" r="24" fill="#ffffff" stroke="#111712" stroke-width="6"/>
+                                <!-- Bloodshot Veins Left -->
+                                <path d="M 222,222 L 230,226 M 224,238 L 233,234 M 242,208 L 242,216 M 258,218 L 250,224 M 256,244 L 248,237" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                                <circle cx="243" cy="230" r="5" fill="#dc2626"/>
+                                <circle cx="243" cy="230" r="2.5" fill="#111712"/>
+
+                                <!-- Right Eye -->
+                                <circle cx="318" cy="230" r="22" fill="#ffffff" stroke="#111712" stroke-width="6"/>
+                                <!-- Bloodshot Veins Right -->
+                                <path d="M 300,222 L 308,226 M 302,238 L 310,234 M 318,210 L 318,217 M 334,220 L 326,225 M 332,243 L 324,236" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                                <circle cx="317" cy="230" r="5" fill="#dc2626"/>
+                                <circle cx="317" cy="230" r="2.5" fill="#111712"/>
+                            </g>
+
+                            <!-- Black Nose -->
+                            <ellipse cx="305" cy="262" rx="19" ry="13" fill="#111712"/>
+                            <ellipse cx="300" cy="257" rx="6" ry="3" fill="#64748b"/>
+
+                            <!-- Whisker Dots & Lines -->
+                            <circle cx="266" cy="268" r="2.2" fill="#111712"/>
+                            <circle cx="274" cy="272" r="2.2" fill="#111712"/>
+                            <circle cx="262" cy="275" r="2.2" fill="#111712"/>
+
+                            <!-- Open Mouth & Sharp Teeth -->
+                            <path d="M 232,268 C 248,288 282,292 325,288 C 322,338 302,358 272,348 C 245,338 235,302 232,268 Z" fill="#090d0a" stroke="#111712" stroke-width="6" stroke-linejoin="round"/>
+
+                            <!-- GIANT PREGABALIN CAPSULE IN MOUTH -->
+                            <g transform="translate(298, 308) rotate(1)">
+                                <!-- Red Half (Left) -->
+                                <path d="M -62,-24 L 8,-24 L 8,24 L -62,24 A 24,24 0 0,1 -62,-24 Z" fill="#dc2626" stroke="#111712" stroke-width="6"/>
+                                <!-- White Half (Right) -->
+                                <path d="M 8,-24 L 54,-24 A 24,24 0 0,1 54,24 L 8,24 Z" fill="#f1f5f9" stroke="#111712" stroke-width="6"/>
+                                <!-- Gloss Highlight on Capsule -->
+                                <ellipse cx="-44" cy="-11" rx="10" ry="4" fill="#fca5a5" opacity="0.8"/>
+                            </g>
+
+                            <!-- Top Fangs Biting Pill -->
+                            <polygon points="248,278 258,292 265,282" fill="#ffffff" stroke="#111712" stroke-width="4" stroke-linejoin="round"/>
+                            <polygon points="274,284 282,302 292,286" fill="#ffffff" stroke="#111712" stroke-width="4" stroke-linejoin="round"/>
+                            <polygon points="306,286 312,300 321,286" fill="#ffffff" stroke="#111712" stroke-width="4" stroke-linejoin="round"/>
+
+                            <!-- Bottom Fangs Biting Pill -->
+                            <polygon points="280,342 286,324 295,343" fill="#ffffff" stroke="#111712" stroke-width="4" stroke-linejoin="round"/>
+                            <polygon points="312,340 318,324 325,338" fill="#ffffff" stroke="#111712" stroke-width="4" stroke-linejoin="round"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Interactive Mini-Widget: Degen Addiction Meter -->
+                <div class="w-full max-w-sm mt-3 bg-cardDark/90 border-2 border-oliveBorder rounded-2xl p-4 shadow-lg backdrop-blur-sm">
+                    <div class="flex items-center justify-between text-xs font-mono mb-2">
+                        <span class="text-gray-400 uppercase" data-i18n="meterTitle">Degen Addiction Level:</span>
+                        <span id="degenStatusText" class="text-pumpGreen font-bold">300mg — CERTIFIED DEGEN</span>
+                    </div>
+                    <!-- Progress Bar -->
+                    <div class="w-full h-3 bg-black rounded-full overflow-hidden border border-white/10 p-0.5 mb-3">
+                        <div id="degenBar" class="h-full bg-gradient-to-r from-pumpGreen via-yellow-400 to-pillRed rounded-full transition-all duration-300" style="width: 45%;"></div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="takePillAction()" class="flex-1 py-2 px-3 rounded-xl bg-pillRed hover:bg-red-500 text-white font-mono text-xs font-extrabold uppercase tracking-wider transition active:scale-95 flex items-center justify-center gap-1.5 shadow-sm">
+                            <span>💊</span>
+                            <span data-i18n="takePillBtn">Pop 300mg Pill</span>
+                        </button>
+                        <a href="#rehabBox" class="py-2 px-3 rounded-xl bg-pumpGreen/15 hover:bg-pumpGreen/25 text-pumpGreen border border-pumpGreen/40 font-mono text-xs font-bold transition flex items-center justify-center gap-1">
+                            <span class="" aria-hidden="true">♥</span>
+                            <span data-i18n="goRehabBtn">Go Rehab</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Manifesto, CA, Dex Links & Rehab Wallet (7 cols) -->
+            <div class="lg:col-span-7 flex flex-col gap-5">
+                
+                <!-- Top Tag & Title -->
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pumpGreen/10 border border-pumpGreen/40 text-pumpGreen font-mono text-xs font-bold mb-3">
+                        <span class="w-2 h-2 rounded-full bg-pumpGreen animate-ping"></span>
+                        <span data-i18n="heroBadge">PUMP.FUN CHARITY NARRATIVE • SOLANA</span>
+                    </div>
+                    <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-none text-white">
+                        PREGABAL<span class="text-pumpGreen">INU</span>
+                    </h1>
+                    <p class="mt-2 text-base sm:text-lg text-gray-300 font-medium" data-i18n="heroSubtitle">The first meme coin turning crypto degen gambling addiction into real-world addiction recovery.</p>
+                </div>
+
+                <!-- Mission Manifesto Card -->
+                <div class="bg-cardDark border-2 border-pumpGreen/80 rounded-2xl p-5 shadow-neo relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 text-7xl opacity-10 pointer-events-none select-none">💊</div>
+                    <div class="flex items-center gap-2 text-pumpGreen font-mono text-xs uppercase font-bold mb-2">
+                        <span class="" aria-hidden="true">📣</span>
+                        <span data-i18n="missionHeader">OUR MISSION / MANIFESTO</span>
+                    </div>
+                    <p class="text-sm sm:text-base text-gray-200 leading-relaxed" data-i18n="missionBody">We confront substance addiction through the lens of Pump.fun users' own addiction to <strong>gambling (ludomania)</strong>, dopamine chasing, and hunting for 1000x meme coin gains. <span class='text-pumpGreen font-bold underline decoration-pumpGreen/50'>25% of the token supply</span> is sent by the dev to the address from Continuum of Care's own donation form. The charity is not involved in this project. Their form officially accepts SOL only, so it is not guaranteed they can claim or sell these tokens.</p>
+                </div>
+
+                <!-- Contract Address (CA) + Primary DEX / Social Actions -->
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                    <!-- CA Box -->
+                    <div class="sm:col-span-7 bg-black/80 border-2 border-white/20 rounded-xl p-3 flex items-center justify-between gap-2">
+                        <div class="overflow-hidden">
+                            <span class="block text-[10px] font-mono uppercase text-gray-400" data-i18n="caLabel">Contract Address (SOL):</span>
+                            <code id="caDisplay" class="font-mono text-xs sm:text-sm font-bold text-pumpGreen truncate block">TBA — Launching Soon</code>
+                        </div>
+                        <button onclick="copyText('caDisplay', true)" class="shrink-0 px-3 py-2 rounded-lg bg-white/10 hover:bg-pumpGreen hover:text-black text-white font-mono text-xs font-bold transition flex items-center gap-1.5">
+                            <span class="" aria-hidden="true">⧉</span>
+                            <span data-i18n="copyBtn">Copy</span>
+                        </button>
+                    </div>
+
+                    <!-- Action Buttons: DEX & Pump.fun -->
+                    <div class="sm:col-span-5 flex gap-2">
+                        <a id="dexLink" href="https://dexscreener.com/solana" target="_blank" rel="noopener noreferrer" class="flex-1 bg-pumpGreen hover:bg-pumpGreenDark text-black font-display font-extrabold text-sm rounded-xl px-4 py-3 flex items-center justify-center gap-2 shadow-neo transition transform hover:-translate-y-0.5">
+                            <span class="" aria-hidden="true">📈</span>
+                            <span>DEXSCREENER</span>
+                        </a>
+                        <a href="https://pump.fun" target="_blank" rel="noopener noreferrer" class="bg-cardDark hover:bg-white/10 text-white border-2 border-white/20 font-mono font-bold text-xs rounded-xl px-3.5 py-3 flex items-center justify-center transition" title="Pump.fun">
+                            💊 Pump
+                        </a>
+                    </div>
+                </div>
+
+                <!-- REHAB DONATION & ON-CHAIN VERIFICATION BOX -->
+                <div id="rehabBox" class="bg-gradient-to-br from-[#132219] to-[#0d1410] border-2 border-pillRed/80 rounded-2xl p-5 shadow-neo-red relative">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-white/10">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-pillRed/20 border border-pillRed text-pillRed flex items-center justify-center font-bold">
+                                <span class="" aria-hidden="true">✚</span>
+                            </span>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="font-display font-bold text-base sm:text-lg text-white" data-i18n="rehabTitle">Where 25% of supply goes: Continuum of Care</h2>
+                                    <span class="text-[10px] font-mono bg-white/10 text-gray-300 px-2 py-0.5 rounded border border-white/20">501(c)(3) · NOT AFFILIATED</span>
+                                </div>
+                                <p class="text-xs text-gray-400" data-i18n="rehabDesc">Non-profit recovery center (USA). Not affiliated with this token and has not endorsed it.</p>
+                            </div>
+                        </div>
+
+                        <!-- Official Verification Link -->
+                        <a href="https://www.continuumct.org/crypto" target="_blank" rel="noopener noreferrer" class="text-xs font-mono font-bold text-pumpGreen hover:underline flex items-center gap-1 bg-black/40 px-2.5 py-1.5 rounded-lg border border-pumpGreen/30">
+                            <span>continuumct.org/crypto</span>
+                            <span class="text-[10px]" aria-hidden="true">↗</span>
+                        </a>
+                    </div>
+
+                    <!-- Donation Wallet Address Box -->
+                    <div class="mb-3">
+                        <div class="flex items-center justify-between text-xs font-mono text-gray-300 mb-1.5">
+                            <span data-i18n="walletLabel">Continuum donation address from their Giving Block form — 25% of supply goes here:</span>
+                            <span class="text-pumpGreen flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-pumpGreen animate-pulse"></span>
+                                <span data-i18n="liveTrack">Check on Solscan</span>
+                            </span>
+                        </div>
+
+                        <div class="bg-black/90 border border-pumpGreen/50 rounded-xl p-2.5 sm:p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+                            <code id="rehabWallet" class="font-mono text-xs sm:text-sm font-bold text-white break-all select-all">8q6gDDe7ES39Ppktr5yHqiCfNyG9H6KiGtBCFFpwRnW7</code>
+                            
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <button onclick="copyText('rehabWallet', false)" class="flex-1 sm:flex-initial px-3 py-2 rounded-lg bg-pumpGreen hover:bg-pumpGreenDark text-black font-mono text-xs font-extrabold transition flex items-center justify-center gap-1.5">
+                                    <span class="" aria-hidden="true">⧉</span>
+                                    <span data-i18n="copyWalletBtn">Copy Rehab Address</span>
+                                </button>
+                                <button onclick="toggleQrModal()" class="px-2.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-xs transition" title="Wallet QR">
+                                    <span class="" aria-hidden="true">▦</span>
+                                </button>
+                                <a href="https://solscan.io/account/8q6gDDe7ES39Ppktr5yHqiCfNyG9H6KiGtBCFFpwRnW7" target="_blank" rel="noopener noreferrer" class="px-2.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-pumpGreen font-mono text-xs transition flex items-center gap-1" title="Check on Solscan">
+                                    <span>Solscan</span>
+                                    <span class="text-[10px]" aria-hidden="true">↗</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3-Step Fee Flow Mini Pipeline -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 text-xs font-mono">
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-2.5 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-pillRed/20 text-pillRed font-bold flex items-center justify-center shrink-0">1</span>
+                            <span class="text-gray-300" data-i18n="step1">Degens trade $PREGABALINU</span>
+                        </div>
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-2.5 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-yellow-500/20 text-yellow-400 font-bold flex items-center justify-center shrink-0">2</span>
+                            <span class="text-gray-300" data-i18n="step2">Dev sends 25% of supply</span>
+                        </div>
+                        <div class="bg-black/40 border border-pumpGreen/30 rounded-lg p-2.5 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-pumpGreen/20 text-pumpGreen font-bold flex items-center justify-center shrink-0">3</span>
+                            <span class="text-gray-200 font-semibold" data-i18n="step3">To Continuum address 8q6g...RnW7</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Compact Footer -->
+    <footer class="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 border-t border-white/10 text-xs font-mono text-gray-500 flex flex-col sm:flex-row items-center justify-between gap-2 z-10 relative">
+        <div>
+            <span>$PREGABALINU © 2026</span> • <span data-i18n="footerDisclaimer">Meme token. Continuum of Care is not affiliated. Not financial or medical advice.</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="https://www.continuumct.org/crypto" target="_blank" rel="noopener noreferrer" class="hover:text-pumpGreen transition">Continuum of Care</a>
+            <a href="https://solscan.io/account/8q6gDDe7ES39Ppktr5yHqiCfNyG9H6KiGtBCFFpwRnW7" target="_blank" rel="noopener noreferrer" class="hover:text-pumpGreen transition">Donation address on Solscan</a>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-pumpGreen text-black font-mono text-xs sm:text-sm font-extrabold px-4 py-3 rounded-xl border-2 border-black shadow-neo transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center gap-2 pointer-events-none">
+        <span class="text-base" aria-hidden="true">✔</span>
+        <span id="toastMsg">Copied!</span>
+    </div>
+
+    <!-- Modal 1: Set / Preview Contract Address (CA) -->
+    <div id="caModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardDark border-2 border-pumpGreen rounded-2xl max-w-md w-full p-5 shadow-neo">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-display font-bold text-lg text-white" data-i18n="modalCaTitle">Update Contract Address (CA)</h3>
+                <button onclick="closeCaModal()" class="text-gray-400 hover:text-white">
+                    <span class="text-lg" aria-hidden="true">✕</span>
+                </button>
+            </div>
+            <p class="text-xs text-gray-400 mb-3" data-i18n="modalCaDesc">Paste your live Solana mint address here to update the banner and link the DexScreener button automatically.</p>
+            <input id="caInput" type="text" placeholder="e.g. 7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU" class="w-full bg-black border border-white/20 rounded-xl px-3 py-2.5 font-mono text-xs text-pumpGreen focus:outline-none focus:border-pumpGreen mb-4">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeCaModal()" class="px-4 py-2 rounded-xl bg-white/10 text-gray-300 font-mono text-xs font-bold">Cancel</button>
+                <button onclick="saveCustomCa()" class="px-4 py-2 rounded-xl bg-pumpGreen text-black font-mono text-xs font-extrabold">Apply CA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Rehab Wallet QR Visualization -->
+    <div id="qrModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardDark border-2 border-pillRed rounded-2xl max-w-sm w-full p-5 shadow-neo-red text-center">
+            <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs uppercase text-pillRed font-bold">Continuum donation address (Giving Block)</span>
+                <button onclick="toggleQrModal()" class="text-gray-400 hover:text-white">
+                    <span class="text-lg" aria-hidden="true">✕</span>
+                </button>
+            </div>
+            <div class="bg-white p-4 rounded-xl inline-block mb-3">
+                <svg width="180" height="180" version="1.1" viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg"><path d="M1,1H2V2H1zM2,1H3V2H2zM3,1H4V2H3zM4,1H5V2H4zM5,1H6V2H5zM6,1H7V2H6zM7,1H8V2H7zM10,1H11V2H10zM11,1H12V2H11zM12,1H13V2H12zM17,1H18V2H17zM19,1H20V2H19zM27,1H28V2H27zM28,1H29V2H28zM29,1H30V2H29zM30,1H31V2H30zM31,1H32V2H31zM32,1H33V2H32zM33,1H34V2H33zM1,2H2V3H1zM7,2H8V3H7zM9,2H10V3H9zM13,2H14V3H13zM14,2H15V3H14zM15,2H16V3H15zM18,2H19V3H18zM21,2H22V3H21zM22,2H23V3H22zM23,2H24V3H23zM25,2H26V3H25zM27,2H28V3H27zM33,2H34V3H33zM1,3H2V4H1zM3,3H4V4H3zM4,3H5V4H4zM5,3H6V4H5zM7,3H8V4H7zM9,3H10V4H9zM11,3H12V4H11zM14,3H15V4H14zM16,3H17V4H16zM18,3H19V4H18zM19,3H20V4H19zM25,3H26V4H25zM27,3H28V4H27zM29,3H30V4H29zM30,3H31V4H30zM31,3H32V4H31zM33,3H34V4H33zM1,4H2V5H1zM3,4H4V5H3zM4,4H5V5H4zM5,4H6V5H5zM7,4H8V5H7zM9,4H10V5H9zM12,4H13V5H12zM13,4H14V5H13zM16,4H17V5H16zM25,4H26V5H25zM27,4H28V5H27zM29,4H30V5H29zM30,4H31V5H30zM31,4H32V5H31zM33,4H34V5H33zM1,5H2V6H1zM3,5H4V6H3zM4,5H5V6H4zM5,5H6V6H5zM7,5H8V6H7zM10,5H11V6H10zM12,5H13V6H12zM13,5H14V6H13zM16,5H17V6H16zM18,5H19V6H18zM19,5H20V6H19zM22,5H23V6H22zM25,5H26V6H25zM27,5H28V6H27zM29,5H30V6H29zM30,5H31V6H30zM31,5H32V6H31zM33,5H34V6H33zM1,6H2V7H1zM7,6H8V7H7zM10,6H11V7H10zM11,6H12V7H11zM13,6H14V7H13zM14,6H15V7H14zM15,6H16V7H15zM17,6H18V7H17zM19,6H20V7H19zM21,6H22V7H21zM27,6H28V7H27zM33,6H34V7H33zM1,7H2V8H1zM2,7H3V8H2zM3,7H4V8H3zM4,7H5V8H4zM5,7H6V8H5zM6,7H7V8H6zM7,7H8V8H7zM9,7H10V8H9zM11,7H12V8H11zM13,7H14V8H13zM15,7H16V8H15zM17,7H18V8H17zM19,7H20V8H19zM21,7H22V8H21zM23,7H24V8H23zM25,7H26V8H25zM27,7H28V8H27zM28,7H29V8H28zM29,7H30V8H29zM30,7H31V8H30zM31,7H32V8H31zM32,7H33V8H32zM33,7H34V8H33zM9,8H10V9H9zM10,8H11V9H10zM11,8H12V9H11zM24,8H25V9H24zM1,9H2V10H1zM7,9H8V10H7zM9,9H10V10H9zM10,9H11V10H10zM11,9H12V10H11zM12,9H13V10H12zM15,9H16V10H15zM16,9H17V10H16zM21,9H22V10H21zM23,9H24V10H23zM26,9H27V10H26zM27,9H28V10H27zM30,9H31V10H30zM31,9H32V10H31zM32,9H33V10H32zM3,10H4V11H3zM5,10H6V11H5zM6,10H7V11H6zM8,10H9V11H8zM10,10H11V11H10zM13,10H14V11H13zM15,10H16V11H15zM19,10H20V11H19zM20,10H21V11H20zM23,10H24V11H23zM26,10H27V11H26zM29,10H30V11H29zM31,10H32V11H31zM32,10H33V11H32zM1,11H2V12H1zM2,11H3V12H2zM3,11H4V12H3zM4,11H5V12H4zM7,11H8V12H7zM9,11H10V12H9zM12,11H13V12H12zM13,11H14V12H13zM16,11H17V12H16zM17,11H18V12H17zM19,11H20V12H19zM22,11H23V12H22zM30,11H31V12H30zM31,11H32V12H31zM32,11H33V12H32zM1,12H2V13H1zM2,12H3V13H2zM3,12H4V13H3zM10,12H11V13H10zM13,12H14V13H13zM15,12H16V13H15zM23,12H24V13H23zM25,12H26V13H25zM28,12H29V13H28zM31,12H32V13H31zM32,12H33V13H32zM33,12H34V13H33zM1,13H2V14H1zM3,13H4V14H3zM5,13H6V14H5zM6,13H7V14H6zM7,13H8V14H7zM10,13H11V14H10zM11,13H12V14H11zM12,13H13V14H12zM13,13H14V14H13zM14,13H15V14H14zM15,13H16V14H15zM17,13H18V14H17zM18,13H19V14H18zM19,13H20V14H19zM21,13H22V14H21zM22,13H23V14H22zM23,13H24V14H23zM27,13H28V14H27zM33,13H34V14H33zM1,14H2V15H1zM2,14H3V15H2zM3,14H4V15H3zM9,14H10V15H9zM14,14H15V15H14zM15,14H16V15H15zM17,14H18V15H17zM21,14H22V15H21zM22,14H23V15H22zM23,14H24V15H23zM24,14H25V15H24zM25,14H26V15H25zM26,14H27V15H26zM27,14H28V15H27zM28,14H29V15H28zM30,14H31V15H30zM31,14H32V15H31zM32,14H33V15H32zM33,14H34V15H33zM2,15H3V16H2zM3,15H4V16H3zM4,15H5V16H4zM7,15H8V16H7zM9,15H10V16H9zM12,15H13V16H12zM14,15H15V16H14zM15,15H16V16H15zM18,15H19V16H18zM19,15H20V16H19zM20,15H21V16H20zM26,15H27V16H26zM28,15H29V16H28zM29,15H30V16H29zM31,15H32V16H31zM32,15H33V16H32zM1,16H2V17H1zM2,16H3V17H2zM4,16H5V17H4zM5,16H6V17H5zM9,16H10V17H9zM10,16H11V17H10zM13,16H14V17H13zM14,16H15V17H14zM15,16H16V17H15zM16,16H17V17H16zM20,16H21V17H20zM24,16H25V17H24zM26,16H27V17H26zM28,16H29V17H28zM29,16H30V17H29zM30,16H31V17H30zM31,16H32V17H31zM33,16H34V17H33zM1,17H2V18H1zM2,17H3V18H2zM4,17H5V18H4zM5,17H6V18H5zM6,17H7V18H6zM7,17H8V18H7zM12,17H13V18H12zM13,17H14V18H13zM15,17H16V18H15zM17,17H18V18H17zM18,17H19V18H18zM20,17H21V18H20zM23,17H24V18H23zM26,17H27V18H26zM28,17H29V18H28zM29,17H30V18H29zM31,17H32V18H31zM33,17H34V18H33zM2,18H3V19H2zM5,18H6V19H5zM6,18H7V19H6zM10,18H11V19H10zM12,18H13V19H12zM15,18H16V19H15zM16,18H17V19H16zM18,18H19V19H18zM19,18H20V19H19zM21,18H22V19H21zM22,18H23V19H22zM23,18H24V19H23zM24,18H25V19H24zM25,18H26V19H25zM28,18H29V19H28zM30,18H31V19H30zM31,18H32V19H31zM1,19H2V20H1zM2,19H3V20H2zM3,19H4V20H3zM6,19H7V20H6zM7,19H8V20H7zM8,19H9V20H8zM10,19H11V20H10zM15,19H16V20H15zM16,19H17V20H16zM20,19H21V20H20zM24,19H25V20H24zM27,19H28V20H27zM28,19H29V20H28zM29,19H30V20H29zM30,19H31V20H30zM33,19H34V20H33zM1,20H2V21H1zM3,20H4V21H3zM4,20H5V21H4zM5,20H6V21H5zM6,20H7V21H6zM8,20H9V21H8zM12,20H13V21H12zM15,20H16V21H15zM16,20H17V21H16zM17,20H18V21H17zM18,20H19V21H18zM19,20H20V21H19zM22,20H23V21H22zM24,20H25V21H24zM25,20H26V21H25zM26,20H27V21H26zM27,20H28V21H27zM28,20H29V21H28zM30,20H31V21H30zM31,20H32V21H31zM32,20H33V21H32zM2,21H3V22H2zM3,21H4V22H3zM7,21H8V22H7zM8,21H9V22H8zM10,21H11V22H10zM13,21H14V22H13zM14,21H15V22H14zM16,21H17V22H16zM17,21H18V22H17zM20,21H21V22H20zM21,21H22V22H21zM22,21H23V22H22zM23,21H24V22H23zM26,21H27V22H26zM28,21H29V22H28zM33,21H34V22H33zM1,22H2V23H1zM3,22H4V23H3zM8,22H9V23H8zM9,22H10V23H9zM11,22H12V23H11zM12,22H13V23H12zM15,22H16V23H15zM17,22H18V23H17zM19,22H20V23H19zM21,22H22V23H21zM23,22H24V23H23zM26,22H27V23H26zM27,22H28V23H27zM28,22H29V23H28zM29,22H30V23H29zM31,22H32V23H31zM32,22H33V23H32zM1,23H2V24H1zM3,23H4V24H3zM5,23H6V24H5zM7,23H8V24H7zM8,23H9V24H8zM12,23H13V24H12zM13,23H14V24H13zM15,23H16V24H15zM16,23H17V24H16zM17,23H18V24H17zM18,23H19V24H18zM21,23H22V24H21zM22,23H23V24H22zM23,23H24V24H23zM25,23H26V24H25zM26,23H27V24H26zM28,23H29V24H28zM29,23H30V24H29zM1,24H2V25H1zM4,24H5V25H4zM5,24H6V25H5zM10,24H11V25H10zM11,24H12V25H11zM12,24H13V25H12zM14,24H15V25H14zM15,24H16V25H15zM19,24H20V25H19zM24,24H25V25H24zM26,24H27V25H26zM28,24H29V25H28zM30,24H31V25H30zM31,24H32V25H31zM1,25H2V26H1zM2,25H3V26H2zM3,25H4V26H3zM4,25H5V26H4zM7,25H8V26H7zM12,25H13V26H12zM16,25H17V26H16zM17,25H18V26H17zM18,25H19V26H18zM20,25H21V26H20zM25,25H26V26H25zM26,25H27V26H26zM27,25H28V26H27zM28,25H29V26H28zM29,25H30V26H29zM30,25H31V26H30zM31,25H32V26H31zM9,26H10V27H9zM11,26H12V27H11zM13,26H14V27H13zM14,26H15V27H14zM17,26H18V27H17zM19,26H20V27H19zM20,26H21V27H20zM21,26H22V27H21zM23,26H24V27H23zM24,26H25V27H24zM25,26H26V27H25zM29,26H30V27H29zM30,26H31V27H30zM31,26H32V27H31zM33,26H34V27H33zM1,27H2V28H1zM2,27H3V28H2zM3,27H4V28H3zM4,27H5V28H4zM5,27H6V28H5zM6,27H7V28H6zM7,27H8V28H7zM10,27H11V28H10zM12,27H13V28H12zM13,27H14V28H13zM14,27H15V28H14zM15,27H16V28H15zM16,27H17V28H16zM17,27H18V28H17zM19,27H20V28H19zM21,27H22V28H21zM22,27H23V28H22zM24,27H25V28H24zM25,27H26V28H25zM27,27H28V28H27zM29,27H30V28H29zM30,27H31V28H30zM32,27H33V28H32zM1,28H2V29H1zM7,28H8V29H7zM10,28H11V29H10zM17,28H18V29H17zM25,28H26V29H25zM29,28H30V29H29zM30,28H31V29H30zM31,28H32V29H31zM32,28H33V29H32zM1,29H2V30H1zM3,29H4V30H3zM4,29H5V30H4zM5,29H6V30H5zM7,29H8V30H7zM10,29H11V30H10zM11,29H12V30H11zM12,29H13V30H12zM13,29H14V30H13zM14,29H15V30H14zM19,29H20V30H19zM22,29H23V30H22zM25,29H26V30H25zM26,29H27V30H26zM27,29H28V30H27zM28,29H29V30H28zM29,29H30V30H29zM31,29H32V30H31zM33,29H34V30H33zM1,30H2V31H1zM3,30H4V31H3zM4,30H5V31H4zM5,30H6V31H5zM7,30H8V31H7zM10,30H11V31H10zM11,30H12V31H11zM12,30H13V31H12zM13,30H14V31H13zM14,30H15V31H14zM17,30H18V31H17zM18,30H19V31H18zM21,30H22V31H21zM23,30H24V31H23zM24,30H25V31H24zM26,30H27V31H26zM31,30H32V31H31zM33,30H34V31H33zM1,31H2V32H1zM3,31H4V32H3zM4,31H5V32H4zM5,31H6V32H5zM7,31H8V32H7zM11,31H12V32H11zM12,31H13V32H12zM17,31H18V32H17zM21,31H22V32H21zM23,31H24V32H23zM24,31H25V32H24zM25,31H26V32H25zM27,31H28V32H27zM29,31H30V32H29zM32,31H33V32H32zM33,31H34V32H33zM1,32H2V33H1zM7,32H8V33H7zM10,32H11V33H10zM11,32H12V33H11zM13,32H14V33H13zM14,32H15V33H14zM15,32H16V33H15zM16,32H17V33H16zM17,32H18V33H17zM19,32H20V33H19zM20,32H21V33H20zM21,32H22V33H21zM30,32H31V33H30zM31,32H32V33H31zM1,33H2V34H1zM2,33H3V34H2zM3,33H4V34H3zM4,33H5V34H4zM5,33H6V34H5zM6,33H7V34H6zM7,33H8V34H7zM9,33H10V34H9zM10,33H11V34H10zM11,33H12V34H11zM12,33H13V34H12zM13,33H14V34H13zM17,33H18V34H17zM18,33H19V34H18zM20,33H21V34H20zM21,33H22V34H21zM24,33H25V34H24zM25,33H26V34H25zM27,33H28V34H27zM31,33H32V34H31zM32,33H33V34H32z" id="qr-path" fill="#000000" fill-opacity="1" fill-rule="nonzero" stroke="none"/></svg>
+            </div>
+            <p class="font-mono text-[11px] text-gray-300 break-all bg-black/60 p-2 rounded-lg border border-white/10 mb-3">
+                8q6gDDe7ES39Ppktr5yHqiCfNyG9H6KiGtBCFFpwRnW7
+            </p>
+            <button onclick="copyText('rehabWallet', false)" class="w-full py-2.5 rounded-xl bg-pumpGreen text-black font-mono text-xs font-extrabold uppercase">
+                Copy address
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- Localization Dictionary (RU / EN) ---
+        const i18n = {
+            en: {
+                marquee1: "25% OF SUPPLY SENT TO CONTINUUM OF CARE'S DONATION ADDRESS",
+                marquee2: "FIGHTING PUMP.FUN GAMBLING ADDICTION WITH REAL RECOVERY",
+                dopamineBtnOff: "Dopamine: OFF",
+                dopamineBtnOn: "Dopamine: MAX 🔥",
+                editCaBtn: "Set CA",
+                meterTitle: "Degen Addiction Level:",
+                takePillBtn: "Pop 300mg Pill",
+                goRehabBtn: "Go Rehab",
+                heroBadge: "PUMP.FUN CHARITY NARRATIVE • SOLANA",
+                heroSubtitle: "The first meme coin turning crypto degen gambling addiction into real-world addiction recovery.",
+                missionHeader: "OUR MISSION / MANIFESTO",
+                missionBody: "We confront substance addiction through the lens of Pump.fun users' own addiction to <strong>gambling (ludomania)</strong>, dopamine chasing, and hunting for 1000x meme coin gains. <span class='text-pumpGreen font-bold underline decoration-pumpGreen/50'>25% of the token supply</span> is sent by the dev to the address from Continuum of Care's own donation form. The charity is not involved in this project. Their form officially accepts SOL only, so it is not guaranteed they can claim or sell these tokens.",
+                caLabel: "Contract Address (SOL):",
+                copyBtn: "Copy",
+                rehabTitle: "Where 25% of supply goes: Continuum of Care",
+                rehabDesc: "Non-profit recovery center (USA). Not affiliated with this token and has not endorsed it.",
+                walletLabel: "Continuum donation address from their Giving Block form — 25% of supply goes here:",
+                liveTrack: "Check on Solscan",
+                copyWalletBtn: "Copy Rehab Address",
+                step1: "Degens trade $PREGABALINU",
+                step2: "Dev sends 25% of supply",
+                step3: "To Continuum address 8q6g...RnW7",
+                footerDisclaimer: "Meme token. Continuum of Care is not affiliated. Not financial or medical advice.",
+                modalCaTitle: "Update Contract Address (CA)",
+                modalCaDesc: "Paste your live Solana mint address here to update the banner and link the DexScreener button automatically.",
+                toastCopiedWallet: "Rehab address 8q6g...RnW7 copied!",
+                toastCopiedCa: "Contract Address copied to clipboard!",
+                defaultCaText: "TBA — Launching Soon"
+            }
+        };
+
+        let currentLang = 'en';
+        let customCa = '';
+        let dopamineMode = false;
+        let degenScore = 45;
+
+        const degenLevels = {
+            en: [
+                { pct: 25, text: "150mg — CALM HOLDER" },
+                { pct: 50, text: "300mg — CERTIFIED DEGEN" },
+                { pct: 75, text: "600mg — GREEN CANDLE ADDICT" },
+                { pct: 95, text: "900mg — NEEDS CONTINUUM REHAB NOW!" },
+                { pct: 100, text: "MAX DOSE — 25% SUPPLY TO REHAB 🚑" }
+            ]
+        };
+        let levelIdx = 1;
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+
+            // Update text elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    el.innerHTML = i18n[lang][key];
+                }
+            });
+
+            // Update Dopamine button label
+            document.getElementById('dopamineText').textContent = dopamineMode
+                ? i18n[lang].dopamineBtnOn
+                : i18n[lang].dopamineBtnOff;
+
+            // Update CA display if not customized
+            if (!customCa) {
+                document.getElementById('caDisplay').textContent = i18n[lang].defaultCaText;
+            }
+
+            // Update Degen status text
+            document.getElementById('degenStatusText').textContent = degenLevels[lang][levelIdx].text;
+        }
+
+        // --- Clipboard Copy Function (iFrame safe) ---
+        function copyText(elementId, isCa) {
+            const textToCopy = document.getElementById(elementId).textContent.trim();
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const msg = isCa ? i18n[currentLang].toastCopiedCa : i18n[currentLang].toastCopiedWallet;
+            showToast(msg);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 2600);
+        }
+
+        // --- Interactive Degen Meter ---
+        function takePillAction() {
+            levelIdx = (levelIdx + 1) % degenLevels[currentLang].length;
+            const currentObj = degenLevels[currentLang][levelIdx];
+            document.getElementById('degenBar').style.width = currentObj.pct + '%';
+            document.getElementById('degenStatusText').textContent = currentObj.text;
+
+            // Burst particles on canvas
+            spawnBurstParticles();
+        }
+
+        // --- Custom CA Modal Logic ---
+        function openCaModal() {
+            const modal = document.getElementById('caModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('caInput').value = customCa;
+            document.getElementById('caInput').focus();
+        }
+
+        function closeCaModal() {
+            const modal = document.getElementById('caModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function saveCustomCa() {
+            const val = document.getElementById('caInput').value.trim();
+            if (val) {
+                customCa = val;
+                document.getElementById('caDisplay').textContent = customCa;
+                document.getElementById('dexLink').href = `https://dexscreener.com/solana/${encodeURIComponent(customCa)}`;
+                showToast('Contract Address updated!');
+            } else {
+                customCa = '';
+                document.getElementById('caDisplay').textContent = i18n[currentLang].defaultCaText;
+                document.getElementById('dexLink').href = 'https://dexscreener.com/solana';
+            }
+            closeCaModal();
+        }
+
+        // --- QR Modal & Deterministic Matrix Generator for Wallet ---
+        function toggleQrModal() {
+            const modal = document.getElementById('qrModal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function drawWalletQrCanvas() {
+            const canvas = document.getElementById('qrCanvas');
+            const ctx = canvas.getContext('2d');
+            const size = 21;
+            const cell = canvas.width / size;
+            const wallet = "8q6gDDe7ES39Ppktr5yHqiCfNyG9H6KiGtBCFFpwRnW7";
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            function drawFinder(r, c) {
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(c * cell, r * cell, 7 * cell, 7 * cell);
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect((c + 1) * cell, (r + 1) * cell, 5 * cell, 5 * cell);
+                ctx.fillStyle = "#ef4444";
+                ctx.fillRect((c + 2) * cell, (r + 2) * cell, 3 * cell, 3 * cell);
+            }
+
+            drawFinder(0, 0);
+            drawFinder(0, size - 7);
+            drawFinder(size - 7, 0);
+
+            ctx.fillStyle = "#0b0f0c";
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    const inTopLeft = r < 8 && c < 8;
+                    const inTopRight = r < 8 && c >= size - 8;
+                    const inBotLeft = r >= size - 8 && c < 8;
+                    if (inTopLeft || inTopRight || inBotLeft) continue;
+
+                    const charCode = wallet.charCodeAt((r * size + c) % wallet.length);
+                    if ((charCode + r * 3 + c * 7) % 2 === 0) {
+                        ctx.fillRect(c * cell, r * cell, cell - 0.5, cell - 0.5);
+                    }
+                }
+            }
+        }
+
+        // --- Dopamine Mode & Floating Pills / Candlesticks Canvas ---
+        const bgCanvas = document.getElementById('bgCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let particles = [];
+
+        function resizeBgCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBgCanvas);
+        resizeBgCanvas();
+
+        function createParticles(count) {
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * bgCanvas.width,
+                    y: Math.random() * bgCanvas.height,
+                    vx: (Math.random() - 0.5) * 0.8,
+                    vy: -Math.random() * 1.2 - 0.4,
+                    size: Math.random() * 12 + 8,
+                    angle: Math.random() * Math.PI * 2,
+                    vAngle: (Math.random() - 0.5) * 0.02,
+                    type: Math.random() > 0.35 ? 'pill' : 'candle'
+                });
+            }
+        }
+
+        function spawnBurstParticles() {
+            for (let i = 0; i < 12; i++) {
+                particles.push({
+                    x: window.innerWidth / 2,
+                    y: window.innerHeight / 2,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6 - 2,
+                    size: Math.random() * 14 + 10,
+                    angle: Math.random() * Math.PI * 2,
+                    vAngle: (Math.random() - 0.5) * 0.08,
+                    type: 'pill'
+                });
+            }
+            if (particles.length > 75) {
+                particles.splice(0, 12);
+            }
+        }
+
+        function toggleDopamineMode() {
+            dopamineMode = !dopamineMode;
+            document.body.classList.toggle('dopamine-active', dopamineMode);
+            bgCanvas.style.opacity = dopamineMode ? '0.9' : '0.45';
+            document.getElementById('dopamineText').textContent = dopamineMode
+                ? i18n[currentLang].dopamineBtnOn
+                : i18n[currentLang].dopamineBtnOff;
+            if (dopamineMode) {
+                spawnBurstParticles();
+            }
+        }
+
+        function animateBg() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            const speedMult = dopamineMode ? 2.8 : 1;
+
+            for (let p of particles) {
+                p.x += p.vx * speedMult;
+                p.y += p.vy * speedMult;
+                p.angle += p.vAngle * speedMult;
+
+                if (p.y < -30) p.y = bgCanvas.height + 30;
+                if (p.x < -30) p.x = bgCanvas.width + 30;
+                if (p.x > bgCanvas.width + 30) p.x = -30;
+
+                bgCtx.save();
+                bgCtx.translate(p.x, p.y);
+                bgCtx.rotate(p.angle);
+
+                if (p.type === 'pill') {
+                    // Draw red & white capsule
+                    const w = p.size * 1.4;
+                    const h = p.size * 0.65;
+                    bgCtx.fillStyle = '#ef4444';
+                    bgCtx.beginPath();
+                    bgCtx.roundRect(-w / 2, -h / 2, w / 2, h, [h / 2, 0, 0, h / 2]);
+                    bgCtx.fill();
+
+                    bgCtx.fillStyle = '#f8fafc';
+                    bgCtx.beginPath();
+                    bgCtx.roundRect(0, -h / 2, w / 2, h, [0, h / 2, h / 2, 0]);
+                    bgCtx.fill();
+                } else {
+                    // Draw green pump candlestick
+                    bgCtx.strokeStyle = '#00ff66';
+                    bgCtx.lineWidth = 2;
+                    bgCtx.beginPath();
+                    bgCtx.moveTo(0, -p.size);
+                    bgCtx.lineTo(0, p.size);
+                    bgCtx.stroke();
+
+                    bgCtx.fillStyle = '#00ff66';
+                    bgCtx.fillRect(-p.size * 0.28, -p.size * 0.55, p.size * 0.56, p.size * 1.1);
+                }
+
+                bgCtx.restore();
+            }
+
+            requestAnimationFrame(animateBg);
+        }
+
+        window.onload = function () {
+            createParticles(26);
+            setLanguage('en');
+            animateBg();
+        };
+    </script>
+</body>
+</html>
